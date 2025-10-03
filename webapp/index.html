@@ -19,52 +19,130 @@
     </style>
   </head>
   <body>
-    <h2>Wallet + Game</h2>
+    <div class="row" style="margin-bottom:12px;">
+      <div>
+        <div style="font-size: 20px; font-weight: 800;">Wallet</div>
+        <div class="muted">CashApp-style Mini</div>
+      </div>
+      <a href="gateway.html" style="text-decoration:none;">BTC Gateway</a>
+    </div>
 
-    <div class="card" id="wallet">
-      <div class="row">
-        <div>
-          <div>Balance</div>
-          <div id="balance" style="font-size: 22px; font-weight: 800;">0</div>
-          <div class="muted">Everyone gets a payout every round</div>
+    <!-- Screens -->
+    <div id="screen-home">
+      <div class="card" id="wallet">
+        <div class="row">
+          <div>
+            <div>Balance</div>
+            <div id="balance" style="font-size: 28px; font-weight: 900;">0</div>
+            <div class="muted">Everyone gets a payout every round</div>
+          </div>
+          <button id="withdraw">Withdraw</button>
         </div>
-        <button id="withdraw">Withdraw</button>
       </div>
-    </div>
 
-    <div class="card" id="game">
-      <div class="row">
-        <div>Tap to Flip</div>
-        <button id="play">Play</button>
-      </div>
-      <div class="grid" id="grid">
-        <div class="cell">🎯</div>
-        <div class="cell">⭐</div>
-        <div class="cell">💎</div>
-        <div class="cell">🔥</div>
-        <div class="cell">⚡</div>
-        <div class="cell">🍀</div>
-        <div class="cell">🎲</div>
-        <div class="cell">🎁</div>
-        <div class="cell">🚀</div>
-      </div>
-      <div id="result" class="muted"></div>
-    </div>
-
-    <div class="card" id="exchange">
-      <div class="row">
-        <div>
-          <div>WBTC / WETH Quotes</div>
-          <div class="muted">Demo quotes from CoinGecko</div>
+      <div class="card" id="profile">
+        <div style="margin-bottom:8px; font-weight:700;">Profile</div>
+        <div class="row" style="gap:8px; margin-bottom:8px;">
+          <input id="displayName" placeholder="Display name" />
+          <input id="handle" placeholder="$handle" />
         </div>
-        <a href="gateway.html">BTC Gateway</a>
+        <div class="muted" style="margin-bottom:8px;">Pick a unique $handle to receive payments</div>
+        <button id="saveProfile">Save Profile</button>
       </div>
-      <div style="margin-top: 8px;">
-        <div>WBTC: <span id="wbtc">-</span> USD</div>
-        <div>WETH: <span id="weth">-</span> USD</div>
+
+      <div class="card" id="quotes">
+        <div class="row">
+          <div>
+            <div>WBTC / WETH Quotes</div>
+            <div class="muted">Demo quotes from CoinGecko</div>
+          </div>
+          <div class="muted">USD</div>
+        </div>
+        <div style="margin-top: 8px;">
+          <div>WBTC: <span id="wbtc">-</span></div>
+          <div>WETH: <span id="weth">-</span></div>
+        </div>
+      </div>
+
+      <div class="card" id="game">
+        <div class="row">
+          <div>Tap to Flip</div>
+          <button id="play">Play</button>
+        </div>
+        <div class="grid" id="grid">
+          <div class="cell">🎯</div>
+          <div class="cell">⭐</div>
+          <div class="cell">💎</div>
+          <div class="cell">🔥</div>
+          <div class="cell">⚡</div>
+          <div class="cell">🍀</div>
+          <div class="cell">🎲</div>
+          <div class="cell">🎁</div>
+          <div class="cell">🚀</div>
+        </div>
+        <div id="result" class="muted"></div>
       </div>
     </div>
 
+    <div id="screen-send" style="display:none;">
+      <div class="card">
+        <div style="font-weight:700; margin-bottom:8px;">Send</div>
+        <div class="row" style="gap:8px; margin-bottom:8px;">
+          <input id="sendTo" placeholder="$handle or userId" />
+          <input id="sendAmount" placeholder="Amount" type="number" min="1" />
+        </div>
+        <input id="sendNote" placeholder="Note (optional)" style="width:100%; margin-bottom:8px;" />
+        <button id="sendBtn">Send</button>
+      </div>
+      <div class="card">
+        <div style="font-weight:700; margin-bottom:8px;">Request</div>
+        <div class="row" style="gap:8px; margin-bottom:8px;">
+          <input id="reqFrom" placeholder="$handle or userId" />
+          <input id="reqAmount" placeholder="Amount" type="number" min="1" />
+        </div>
+        <input id="reqNote" placeholder="Note (optional)" style="width:100%; margin-bottom:8px;" />
+        <button id="reqBtn">Request</button>
+        <div id="pendingRequests" style="margin-top:10px;"></div>
+      </div>
+    </div>
+
+    <div id="screen-receive" style="display:none;">
+      <div class="card">
+        <div style="font-weight:700; margin-bottom:8px;">Receive</div>
+        <div>My ID: <span id="myId"></span></div>
+        <div>My $handle: <span id="myHandle">(not set)</span></div>
+        <div class="muted" style="margin:8px 0;">Share your $handle or this QR</div>
+        <canvas id="qr" style="background:#fff; border-radius:8px; padding:8px;"></canvas>
+      </div>
+    </div>
+
+    <div id="screen-activity" style="display:none;">
+      <div class="card">
+        <div style="font-weight:700; margin-bottom:8px;">Activity</div>
+        <div id="activityList" class="muted">No activity yet</div>
+      </div>
+    </div>
+
+    <div id="screen-cash" style="display:none;">
+      <div class="card">
+        <div style="font-weight:700; margin-bottom:8px;">Cash (CAD) — Stub</div>
+        <div class="muted">Connect a Canadian on/off-ramp provider here. This is a placeholder screen.</div>
+        <div style="margin-top:8px;" class="row">
+          <a href="gateway.html?mode=cad">Open CAD Ramp (stub)</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom nav -->
+    <div style="position:fixed; bottom:0; left:0; right:0; background:#0b0f14; border-top:1px solid #1f2a37; display:flex; justify-content:space-around; padding:10px 0;">
+      <button data-nav="home">🏠 Home</button>
+      <button data-nav="send">💸 Send</button>
+      <button data-nav="receive">📥 Receive</button>
+      <button data-nav="activity">🧾 Activity</button>
+      <button data-nav="cash">💵 Cash</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     <script>
       const params = new URLSearchParams(location.search);
       let tgId = params.get('tgId') || 'demo-user';
@@ -78,11 +156,23 @@
       const resultEl = document.getElementById('result');
       const playBtn = document.getElementById('play');
       const withdrawBtn = document.getElementById('withdraw');
+      const displayNameInput = document.getElementById('displayName');
+      const handleInput = document.getElementById('handle');
+      const saveProfileBtn = document.getElementById('saveProfile');
+      const myIdEl = document.getElementById('myId');
+      const myHandleEl = document.getElementById('myHandle');
+      const activityListEl = document.getElementById('activityList');
+      const pendingRequestsEl = document.getElementById('pendingRequests');
 
       async function refreshMe() {
         const res = await fetch(`/api/me/${tgId}`);
         const data = await res.json();
         balanceEl.textContent = data.balance;
+        displayNameInput.value = data.profile?.displayName || '';
+        handleInput.value = data.profile?.handle ? `$${data.profile.handle}` : '';
+        myIdEl.textContent = tgId;
+        myHandleEl.textContent = data.profile?.handle ? `$${data.profile.handle}` : '(not set)';
+        renderQR(data.profile?.handle ? `$${data.profile.handle}` : tgId);
       }
 
       async function playRound() {
@@ -116,12 +206,117 @@
         document.getElementById('weth').textContent = q.WETH_USD ?? '-';
       }
 
+      async function saveProfile() {
+        const payload = {
+          displayName: displayNameInput.value,
+          handle: handleInput.value.replace(/^\$/,'')
+        };
+        const res = await fetch(`/api/profile/${tgId}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+        const data = await res.json();
+        if (!data.ok) alert(data.error || 'Error saving profile');
+        await refreshMe();
+      }
+
+      async function sendPayment() {
+        const to = document.getElementById('sendTo').value;
+        const amount = Number(document.getElementById('sendAmount').value || '0');
+        const note = document.getElementById('sendNote').value;
+        const res = await fetch(`/api/transfer/${tgId}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ to, amount, note }) });
+        const data = await res.json();
+        if (!data.ok) { alert(data.error || 'Send failed'); return; }
+        alert('Sent!');
+        await refreshMe();
+        await loadActivity();
+      }
+
+      async function createRequest() {
+        const to = document.getElementById('reqFrom').value;
+        const amount = Number(document.getElementById('reqAmount').value || '0');
+        const note = document.getElementById('reqNote').value;
+        const res = await fetch(`/api/request/${tgId}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ to, amount, note }) });
+        const data = await res.json();
+        if (!data.ok) { alert(data.error || 'Request failed'); return; }
+        await loadRequests();
+      }
+
+      async function loadRequests() {
+        const res = await fetch(`/api/requests/${tgId}`);
+        const list = await res.json();
+        if (!Array.isArray(list) || list.length === 0) { pendingRequestsEl.textContent = 'No pending requests'; return; }
+        pendingRequestsEl.innerHTML = '';
+        list.forEach(r => {
+          const div = document.createElement('div');
+          div.className = 'row';
+          div.style.marginTop = '6px';
+          div.innerHTML = `<span class="muted">${r.from === tgId ? 'You requested from' : 'Requested by'} ${r.from === tgId ? r.to : r.from} — ${r.amount}</span>`;
+          if (r.to === tgId) {
+            const accept = document.createElement('button');
+            accept.textContent = 'Accept';
+            accept.onclick = async () => {
+              const resp = await fetch(`/api/request/${tgId}/accept`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ requestId: r.id }) });
+              const data = await resp.json();
+              if (!data.ok) { alert(data.error || 'Accept failed'); return; }
+              await refreshMe(); await loadRequests(); await loadActivity();
+            };
+            const decline = document.createElement('button');
+            decline.textContent = 'Decline';
+            decline.onclick = async () => {
+              await fetch(`/api/request/${tgId}/decline`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ requestId: r.id }) });
+              await loadRequests();
+            };
+            div.appendChild(accept);
+            div.appendChild(decline);
+          }
+          pendingRequestsEl.appendChild(div);
+        });
+      }
+
+      async function loadActivity() {
+        const res = await fetch(`/api/activity/${tgId}`);
+        const items = await res.json();
+        if (!Array.isArray(items) || items.length === 0) { activityListEl.textContent = 'No activity yet'; return; }
+        activityListEl.innerHTML = '';
+        items.forEach(it => {
+          const row = document.createElement('div');
+          row.className = 'row';
+          row.style.marginTop = '6px';
+          const dir = it.direction === 'credit' ? '+' : '-';
+          const color = it.direction === 'credit' ? 'win' : 'lose';
+          row.innerHTML = `<div>${it.type}</div><div class="${color}">${dir}${it.amount}</div>`;
+          activityListEl.appendChild(row);
+        });
+      }
+
+      function renderQR(text) {
+        const canvas = document.getElementById('qr');
+        if (!window.QRCode) return; // library not loaded
+        QRCode.toCanvas(canvas, `pay:${text}`, { width: 180 }, function (error) { if (error) console.error(error); });
+      }
+
+      function show(screen) {
+        ['home','send','receive','activity','cash'].forEach(s => {
+          document.getElementById(`screen-${s}`).style.display = s === screen ? 'block' : 'none';
+        });
+      }
+
       document.getElementById('play').addEventListener('click', playRound);
       document.getElementById('withdraw').addEventListener('click', doWithdraw);
+      saveProfileBtn.addEventListener('click', saveProfile);
+      document.getElementById('sendBtn').addEventListener('click', sendPayment);
+      document.getElementById('reqBtn').addEventListener('click', createRequest);
+
+      document.querySelectorAll('[data-nav]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          show(btn.getAttribute('data-nav'));
+          if (btn.getAttribute('data-nav') === 'activity') loadActivity();
+          if (btn.getAttribute('data-nav') === 'send') loadRequests();
+        });
+      });
 
       refreshMe();
       refreshQuotes();
       setInterval(refreshQuotes, 15_000);
+      show('home');
     </script>
   </body>
 </html>

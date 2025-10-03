@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BTC Network Gateway</title>
+    <style>
+      body { font-family: system-ui, sans-serif; margin: 0; padding: 16px; background: #0b0f14; color: #e6edf3; }
+      .card { background: #121820; border: 1px solid #1f2a37; border-radius: 12px; padding: 16px; }
+      input, button { padding: 10px 12px; border-radius: 10px; border: 1px solid #1f2a37; background: #0c121a; color: #e6edf3; }
+      button { background: #0ea5e9; color: #001016; font-weight: 700; border: none; }
+      .row { display: flex; gap: 8px; align-items: center; }
+      .muted { color: #9fb0c0; font-size: 12px; }
+    </style>
+  </head>
+  <body>
+    <h2>BTC Network Gateway</h2>
+
+    <div class="card">
+      <div>Demo gateway stub. Link out to your custodial/non-custodial BTC on/off-ramp, LNURL-withdraw, or WBTC bridge.</div>
+      <div class="muted" style="margin-top: 8px;">This is a placeholder page.</div>
+      <div class="row" style="margin-top: 12px;">
+        <input id="amount" placeholder="Amount in points" type="number" min="0" step="1" />
+        <button id="bridge">Bridge to WBTC</button>
+      </div>
+      <div id="status" style="margin-top: 8px;" class="muted"></div>
+    </div>
+
+    <script>
+      const params = new URLSearchParams(location.search);
+      const tgId = params.get('tgId') || 'demo-user';
+
+      document.getElementById('bridge').addEventListener('click', async () => {
+        const amount = Number(document.getElementById('amount').value || '0');
+        if (!amount || amount <= 0) { alert('Enter an amount'); return; }
+        document.getElementById('status').textContent = 'Initiating external bridge... (stub)';
+        await new Promise(r => setTimeout(r, 800));
+        alert('Pretend bridge initiated. Connect real provider later.');
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,127 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wallet + Game</title>
+    <style>
+      body { font-family: system-ui, sans-serif; margin: 0; padding: 16px; background: #0b0f14; color: #e6edf3; }
+      .card { background: #121820; border: 1px solid #1f2a37; border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+      .row { display: flex; align-items: center; justify-content: space-between; }
+      button { background: #0ea5e9; color: #001016; border: none; padding: 10px 14px; border-radius: 10px; font-weight: 700; cursor: pointer; }
+      button:disabled { opacity: 0.6; cursor: not-allowed; }
+      .muted { color: #9fb0c0; font-size: 12px; }
+      .win { color: #34d399; font-weight: 700; }
+      .lose { color: #f87171; font-weight: 700; }
+      .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; }
+      .cell { background: #0c121a; outline: 1px solid #1f2a37; border-radius: 8px; height: 64px; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+      a { color: #93c5fd; }
+    </style>
+  </head>
+  <body>
+    <h2>Wallet + Game</h2>
+
+    <div class="card" id="wallet">
+      <div class="row">
+        <div>
+          <div>Balance</div>
+          <div id="balance" style="font-size: 22px; font-weight: 800;">0</div>
+          <div class="muted">Everyone gets a payout every round</div>
+        </div>
+        <button id="withdraw">Withdraw</button>
+      </div>
+    </div>
+
+    <div class="card" id="game">
+      <div class="row">
+        <div>Tap to Flip</div>
+        <button id="play">Play</button>
+      </div>
+      <div class="grid" id="grid">
+        <div class="cell">🎯</div>
+        <div class="cell">⭐</div>
+        <div class="cell">💎</div>
+        <div class="cell">🔥</div>
+        <div class="cell">⚡</div>
+        <div class="cell">🍀</div>
+        <div class="cell">🎲</div>
+        <div class="cell">🎁</div>
+        <div class="cell">🚀</div>
+      </div>
+      <div id="result" class="muted"></div>
+    </div>
+
+    <div class="card" id="exchange">
+      <div class="row">
+        <div>
+          <div>WBTC / WETH Quotes</div>
+          <div class="muted">Demo quotes from CoinGecko</div>
+        </div>
+        <a href="gateway.html">BTC Gateway</a>
+      </div>
+      <div style="margin-top: 8px;">
+        <div>WBTC: <span id="wbtc">-</span> USD</div>
+        <div>WETH: <span id="weth">-</span> USD</div>
+      </div>
+    </div>
+
+    <script>
+      const params = new URLSearchParams(location.search);
+      let tgId = params.get('tgId') || 'demo-user';
+      try {
+        if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe?.user?.id) {
+          tgId = String(window.Telegram.WebApp.initDataUnsafe.user.id);
+        }
+      } catch (e) {}
+
+      const balanceEl = document.getElementById('balance');
+      const resultEl = document.getElementById('result');
+      const playBtn = document.getElementById('play');
+      const withdrawBtn = document.getElementById('withdraw');
+
+      async function refreshMe() {
+        const res = await fetch(`/api/me/${tgId}`);
+        const data = await res.json();
+        balanceEl.textContent = data.balance;
+      }
+
+      async function playRound() {
+        playBtn.disabled = true;
+        resultEl.textContent = '';
+        const res = await fetch(`/api/play/${tgId}`, { method: 'POST' });
+        const data = await res.json();
+        await refreshMe();
+        if (data.win) {
+          resultEl.innerHTML = '<span class="win">WIN! +' + data.payout + '</span>'; 
+          await new Promise(r => setTimeout(r, 1000)); // pause-on-win
+        } else {
+          resultEl.innerHTML = '<span class="lose">TRY AGAIN +' + data.payout + '</span>';
+        }
+        playBtn.disabled = false;
+      }
+
+      async function doWithdraw() {
+        const amount = prompt('Withdraw how many points?');
+        if (!amount) return;
+        const res = await fetch(`/api/withdraw/${tgId}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ amount: Number(amount) }) });
+        const data = await res.json();
+        if (data.ok) alert(`Withdrew ${data.amount}. Id: ${data.withdrawalId}`);
+        await refreshMe();
+      }
+
+      async function refreshQuotes() {
+        const res = await fetch('/api/quotes');
+        const q = await res.json();
+        document.getElementById('wbtc').textContent = q.WBTC_USD ?? '-';
+        document.getElementById('weth').textContent = q.WETH_USD ?? '-';
+      }
+
+      document.getElementById('play').addEventListener('click', playRound);
+      document.getElementById('withdraw').addEventListener('click', doWithdraw);
+
+      refreshMe();
+      refreshQuotes();
+      setInterval(refreshQuotes, 15_000);
+    </script>
+  </body>
+</html>

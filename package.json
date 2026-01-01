@@ -1,0 +1,31 @@
+{
+  "name": "workspace",
+  "version": "1.0.0",
+  "description": "A public goods project aimed at creating the cheapest crypto debit card, with no hidden fees or costs, nor any centralised entity controlling it.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node src/server.js",
+    "start": "NODE_ENV=production node src/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/I-AI-INTERGRATIONS/crypto-card.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/I-AI-INTERGRATIONS/crypto-card/issues"
+  },
+  "homepage": "https://github.com/I-AI-INTERGRATIONS/crypto-card#readme",
+  "dependencies": {
+    "axios": "^1.12.2",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "nanoid": "^5.1.6",
+    "telegraf": "^4.16.3"
+  }
+}
